@@ -1,0 +1,142 @@
+using System;
+
+namespace Facade
+{
+     
+    class Engine
+    {
+        public float Volume { get; set; }
+        public int Rotations { get; set; }
+
+        public void StartEngine()
+        {
+            System.Console.WriteLine("Engine started");
+        }
+        public void StopEngine()
+        {
+            System.Console.WriteLine("Engine stopped");
+        }
+        public void Accelerate(int rotations)
+        {
+            Rotations++;
+        }
+        public void Deaccelerate(int rotations)
+        {
+            Rotations--;
+        }
+        public void Reset()
+        {
+            Rotations = 1000;
+        }
+    }
+
+    class SystemCheck
+    {
+        public bool Check()
+        {
+            System.Console.WriteLine("Check automobile Engine");
+            System.Console.WriteLine("Check wheel pressure");
+            System.Console.WriteLine("Check electronics");
+            return true;
+        }
+    }
+    class Transmission
+    {
+        public int Position { get; set; } = 0;
+        public void Increase(Engine engine)
+        {
+            if (Position < 4)
+            {
+                Position++;
+                engine.Reset();
+            }
+        }
+        public void Decrease()
+        {
+            Position--;
+        }
+    }
+    class Car
+    {
+        public bool motion = false;
+        public bool start = false;
+        Engine Engine=new Engine() { Volume = 2.0f };
+        SystemCheck SystemCheck = new SystemCheck();
+        Transmission Transmission = new Transmission();
+ 
+        public void Start()
+        {
+            if (SystemCheck.Check())
+                Engine.StartEngine();
+            start = true;
+         }
+        public void Stop()
+        {
+            try
+            {
+                //Throw Exception you need to stop and then stop               
+                if (motion==true)
+                {
+                    throw new Exception("You must decrease your speed to zero!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Ошибка: {e.Message}");
+            }
+            
+            Engine.StopEngine();
+        }
+        public void DriveForward()
+        {
+            if (start == true)
+            {
+                motion = true;
+                Engine.Accelerate(1000);
+                if ((Engine.Rotations > 4000 )&&(Engine.Rotations<6000))
+                {
+                    Transmission.Increase(Engine);
+
+                }
+            }
+            else
+                Console.WriteLine("You must start the engine first!");
+
+        }
+        public void DriveBackward()
+        {
+            Console.WriteLine("backward!");
+            //Check state
+            //Transmission - Reverse
+            //Increase Engine Rotation
+        }
+
+        public void TurnLeft()
+        {
+            // if it is still avaible to TurnLeft - Turn Left
+        }
+        public void TurnRight()
+        {
+            // if it is still avaiable to TurnRight  - Turn Right
+        }
+
+    }
+    
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Let's drive, world!");
+            Car c = new Car();
+            c.Start();
+            c.DriveForward();
+            c.TurnLeft();
+            c.DriveForward();
+            c.Stop();
+           
+           
+
+        }
+    }
+}
